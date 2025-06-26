@@ -4,9 +4,9 @@ Este repositorio contiene el código desarrollado para resolver el problema de p
 
 ## Estructura
 
-- `src/main.py`: Script principal que ejecuta los modelos o heurísticas.
+- `src/main.py`: Script principal que ejecuta los modelos y la heurística.
 - `src/modelos.py`: Contiene las distintas formulaciones matemáticas (modelo 0, 1, 3).
-- `src/heuristica.py`: Métodos heurísticos.
+- `src/heuristica.py`: Algoritmo heurístico.
 - `src/utils.py`: Funciones auxiliares: lectura de instancias, definición de conjuntos, etc.
 
 ## Ejecución
