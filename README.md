@@ -1,4 +1,4 @@
-# Physician Scheduling Problem (TFGM)
+# Physician Scheduling Problem (PRP)
 
 Este repositorio contiene el código desarrollado para resolver el problema de planificación de turnos médicos, en el contexto del Trabajo Fin de Grado.
 
