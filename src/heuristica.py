@@ -2,6 +2,10 @@ from gurobipy import *
 import random
 
 def definir_var_ceros(modelo, Physicians, Dates, Shifts, Locations, x, t, l, o, SaturdayList, y, c3, c4, c3prev, c4prev, g5, h6, WeekendDates, PrevShifts, PrevDays, j, z, model):
+    
+    """Se definen las variables = 0 para evitar problemas en la heurística"""
+    
+    
     if modelo == '3':
         for n in Physicians:
             for d in Dates:
@@ -128,6 +132,14 @@ def heuristica_ordenada(Physicians, Phy_Night_Pre, Night_Consec_Pre, Consecutive
                         LabDates, UnavailablePhysicians, Shifts, Locations, alpha, UndesiredPhysicians, 
                         Num_Incomp, SaturdayList):
 
+    """
+        Se genera una solución factible del modelo con el algoritmo heurístico
+
+        Input: Conjuntos y parámetros
+
+        Output: set Var_Pre con las variables x[n,d,s,k] que se deben iniciar; es decir, 
+            turnos asignados
+    """
             
     Var_Pre = set() #set de variables x preiniciadas
 
@@ -362,7 +374,9 @@ def heuristica_ordenada(Physicians, Phy_Night_Pre, Night_Consec_Pre, Consecutive
     return Var_Pre
 
 def iniciar_turnos(Var_Pre, x, model):
-    #Iniciamos las variables x
+
+    "Se inician las variables x dada una solución de la heurística"
+
     for var in Var_Pre:
         n = var[0]
         d = var[1]
@@ -376,7 +390,9 @@ def iniciar_variables(
         modelo, Physicians, Dates, Shifts, Locations, x, t, l, o, WeekendDates, SaturdayList, y, h6, 
         model, beta3, c3, LastShift, c3prev, PrevShifts, beta, c4, ConsecutiveDays, c4prev, PrevDays, j, 
         UndesiredPhysicians, g5, PhysiciansCompleteWeekend, z):
-    #Inicialización del resto de variables a partir de los turnos (variables x)
+    
+    "Se definen el resto de variables (no x) tras una iteración de la heurística"
+
     if modelo == '3':
         for n in Physicians:
             for d in Dates:
@@ -563,9 +579,9 @@ def calcular_funcion_objetivo(
         modelo, omega, c3, c3prev, c4, c4prev, Physicians, Dates, Shifts, PrevShifts, PrevDays, g5, h6, 
         SaturdayList, j, t, UndesiredPhysicians, WeekendDates):
     
-    if modelo == '2':
-        valor = omega[3]*(sum(c3[n,d,s].Start for n in Physicians for d in Dates for s in Shifts) + sum(c3prev[n,d,s].Start for n in Physicians for d in PrevShifts for s in Shifts)) + omega[4]*(sum(c4[n,d].Start for n in Physicians for d in Dates) + sum(c4prev[n,d].Start for n in Physicians for d in PrevDays)) + omega[5]*sum(g5[n,d,s].Start for n in Physicians for d in Dates for s in Shifts) + omega[6]*sum(h6[n,d].Start for n in Physicians for d in SaturdayList) + omega[7]*sum(j[7,n].Start for n in Physicians) + omega[8]*sum(j[8,n].Start for n in Physicians) + omega[9]*sum(j[9,n].Start for n in Physicians)
-    elif modelo == '3':
+    """Se calcula la función objetivo para diferentes modelos"""
+
+    if modelo == '3':
         valor = omega[3]*(sum(c3[n,d,s].Start for n in Physicians for d in Dates for s in Shifts) + sum(c3prev[n,d,s].Start for n in Physicians for d in PrevShifts for s in Shifts)) + omega[4]*(sum(c4[n,d].Start for n in Physicians for d in Dates) + sum(c4prev[n,d].Start for n in Physicians for d in PrevDays)) + omega[5]*sum(t[n,d,s].Start for (n,d,s) in UndesiredPhysicians) + omega[6]*sum(h6[n,d].Start for n in Physicians for d in WeekendDates) + omega[7]*sum(j[7,n].Start for n in Physicians) + omega[8]*sum(j[8,n].Start for n in Physicians) + omega[9]*sum(j[9,n].Start for n in Physicians)
         #*sum(t[n,d,s] for (n,d,s) in UndesiredPhysicians)
     elif modelo == '1':
